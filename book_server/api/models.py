@@ -31,11 +31,12 @@ class UserManager(BaseUserManager):
     return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-  student_id = models.IntegerField(unique=True, null=True)
-  name = models.CharField(max_length=10, null=True)
-  email = models.EmailField(max_length=30, null=True)
-  is_superuser = models.BooleanField(default=False, null=True)
-  phone = models.CharField(max_length=30, null=True)
+  student_id = models.IntegerField(unique=True)
+  name = models.CharField(max_length=10)
+  email = models.EmailField(max_length=30)
+  is_superuser = models.BooleanField(default=False)
+  phone = models.CharField(max_length=30)
+  token = models.CharField(max_length=256, null=True)
   date_joined = models.DateTimeField(default=timezone.now)
 
   objects = UserManager()
