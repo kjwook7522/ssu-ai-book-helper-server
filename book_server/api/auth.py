@@ -12,12 +12,18 @@ from api.serializer import UserSerializer
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-@api_view(['GET'])
-def getUsers(request):
-  users = User.objects.all()
-  serializer = UserSerializer(users, many=True)
+@api_view(['GET', 'DELETE'])
+def handleUser(request):
+  if request.method == 'GET':
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
   
-  return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+  
+  if request.method == 'DELETE':
+    user = request.user
+    user.delete()
+    return Response({'detail': '%d님 삭제가 완료되었습니다' % user.student_id})
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
