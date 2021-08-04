@@ -6,7 +6,7 @@ from api.models import User
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    exclude = ('password', 'groups', 'user_permissions')
+    exclude = ('token', 'password', 'groups', 'user_permissions')
   
   def validate_password(self, password, userPassword):
     return check_password(password, userPassword)

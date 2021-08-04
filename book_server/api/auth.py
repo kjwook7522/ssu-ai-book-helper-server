@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.contrib.auth.hashers import check_password
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -32,14 +33,18 @@ def signIn(request):
     return Response({'detail': '아이디가 없거나 비밀번호가 틀렸습니다'}, status=status.HTTP_404_NOT_FOUND)
 
   user = User.objects.get(student_id=studentId)
-  serializer = UserSerializer(user)
 
-  if not serializer.validate_password(password, user.password):
+  if not check_password(password, user.password):
     return Response({'detail': '아이디가 없거나 비밀번호가 틀렸습니다'}, status=status.HTTP_404_NOT_FOUND)
 
   payload = jwt_payload_handler(user)
   token = jwt_encode_handler(payload)
-  
+
+  user.token = token
+  user.save()
+
+  serializer = UserSerializer(user)
+
   return Response({
     'token': token,
     'user': serializer.data
@@ -73,3 +78,25 @@ def signUp(request):
     return Response({'detail': '데이터 타입이 맞지않습니다'}, status=status.HTTP_400_BAD_REQUEST)
   
   return Response({'detail': '회원가입이 성공적으로 완료되었습니다', 'user': serializer.data}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def refreshToken(request):
+  if 'token' not in request.data:
+    return Response({'detail': 'body 요소가 누락되었습니다'}, status=status.HTTP_400_BAD_REQUEST)
+  
+  token = request.data['token']
+  
+  user = User.objects.filter(token=token)
+
+  if not user.exists():
+    return Response({'detail': '해당 토큰을 발급받은 유저가 없습니다'}, status=status.HTTP_404_NOT_FOUND)
+  
+  user = user.first()
+  payload = jwt_payload_handler(user)
+  token = jwt_encode_handler(payload)
+
+  user.token = token
+  user.save()
+
+  return Response({'token': token}, status=status.HTTP_200_OK)
