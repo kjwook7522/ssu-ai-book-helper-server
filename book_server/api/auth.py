@@ -80,6 +80,12 @@ def signUp(request):
   return Response({'detail': '회원가입이 성공적으로 완료되었습니다', 'user': serializer.data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
+def signOut(request):
+  user = request.user
+  updateUserToken(user, None)
+  return Response({'detail': '로그아웃이 완료되었습니다'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def refreshToken(request):
   if 'token' not in request.data:
@@ -100,3 +106,7 @@ def refreshToken(request):
   user.save()
 
   return Response({'token': token}, status=status.HTTP_200_OK)
+
+def updateUserToken(user, token):
+  user.token = token
+  user.save()

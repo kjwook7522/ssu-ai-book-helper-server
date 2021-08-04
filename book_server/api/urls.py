@@ -5,5 +5,6 @@ urlpatterns = [
   path('user', auth.getUsers, name='get_users'),
   path('signin', auth.signIn, name='signin'),
   path('signup', auth.signUp, name='signup'),
+  path('signout', auth.signOut, name='signout'),
   path('refresh', auth.refreshToken, name='refresh'),
 ]
