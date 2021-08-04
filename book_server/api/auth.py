@@ -32,17 +32,13 @@ def signIn(request):
   if not user.exists():
     return Response({'detail': '아이디가 없거나 비밀번호가 틀렸습니다'}, status=status.HTTP_404_NOT_FOUND)
 
-  user = User.objects.get(student_id=studentId)
+  user = user.first()
 
   if not check_password(password, user.password):
     return Response({'detail': '아이디가 없거나 비밀번호가 틀렸습니다'}, status=status.HTTP_404_NOT_FOUND)
 
-  payload = jwt_payload_handler(user)
-  token = jwt_encode_handler(payload)
-
-  user.token = token
-  user.save()
-
+  token = publishToken(user)
+  updateUserToken(user, token)
   serializer = UserSerializer(user)
 
   return Response({
@@ -88,24 +84,16 @@ def signOut(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def refreshToken(request):
-  if 'token' not in request.data:
-    return Response({'detail': 'body 요소가 누락되었습니다'}, status=status.HTTP_400_BAD_REQUEST)
-  
-  token = request.data['token']
-  
-  user = User.objects.filter(token=token)
-
-  if not user.exists():
-    return Response({'detail': '해당 토큰을 발급받은 유저가 없습니다'}, status=status.HTTP_404_NOT_FOUND)
-  
-  user = user.first()
-  payload = jwt_payload_handler(user)
-  token = jwt_encode_handler(payload)
-
-  user.token = token
-  user.save()
+  user = request.user
+  token = publishToken(user)
+  updateUserToken(user, token)
 
   return Response({'token': token}, status=status.HTTP_200_OK)
+
+def publishToken(user):
+  payload = jwt_payload_handler(user)
+  token = jwt_encode_handler(payload)
+  return token
 
 def updateUserToken(user, token):
   user.token = token
