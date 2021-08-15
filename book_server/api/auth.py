@@ -17,8 +17,12 @@ def handleUser(request):
   if request.method == 'GET':
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
+
+    userArr = []
+    for data in serializer.data:
+      userArr.append(convertSnakeToCamel(data))
   
-    return Response(convertSnakeToCamel(serializer.data), status=status.HTTP_200_OK)
+    return Response(userArr, status=status.HTTP_200_OK)
   
   if request.method == 'DELETE':
     user = request.user
