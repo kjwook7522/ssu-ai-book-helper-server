@@ -18,7 +18,7 @@ def handleUser(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
   
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(convertSnakeToCamel(serializer.data), status=status.HTTP_200_OK)
   
   if request.method == 'DELETE':
     user = request.user
@@ -49,7 +49,7 @@ def signIn(request):
 
   return Response({
     'token': token,
-    'user': serializer.data
+    'user': convertSnakeToCamel(serializer.data)
   })
 
 @api_view(['POST'])
@@ -79,7 +79,7 @@ def signUp(request):
   except TypeError:
     return Response({'detail': '데이터 타입이 맞지않습니다'}, status=status.HTTP_400_BAD_REQUEST)
   
-  return Response({'detail': '회원가입이 성공적으로 완료되었습니다', 'user': serializer.data}, status=status.HTTP_200_OK)
+  return Response({'detail': '회원가입이 성공적으로 완료되었습니다', 'user': convertSnakeToCamel(serializer.data)}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def signOut(request):
@@ -104,3 +104,16 @@ def publishToken(user):
 def updateUserToken(user, token):
   user.token = token
   user.save()
+
+def convertSnakeToCamel(snake):
+  camel = {}
+
+  for key, value in snake.items():
+    words = key.split('_')
+    newKey = words[0]
+
+    for word in words[1:]:
+      newKey += word.title()
+    
+    camel[newKey] = value
+  return camel
