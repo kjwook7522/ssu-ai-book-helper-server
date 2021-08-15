@@ -16,7 +16,7 @@ SECRET_KEY = 'ce9aeacbc06687c59873d08cba41c646c27e252ec095ca4bca5175deb39d3074'
 DEBUG = False
 
 ALLOWED_HOSTS = [ "0.0.0.0", "127.0.0.1", "localhost", "3.36.100.246", "api.ssuaibook.site" ]
-
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -29,11 +29,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'corsheaders',
 
     'api'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
