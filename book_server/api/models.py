@@ -56,3 +56,20 @@ class User(AbstractBaseUser, PermissionsMixin):
   
   def is_staff(self):
     return self.is_superuser
+  
+
+class Book(models.Model):
+  id = models.AutoField(primary_key=True)
+  year = models.IntegerField()
+  rank = models.IntegerField()
+  title = models.CharField(max_length=200)
+  author = models.CharField(max_length=50)
+  review = models.IntegerField()
+  description = models.TextField(max_length=1000, null=True)
+  price = models.CharField(max_length=10)
+  tags = models.CharField(max_length=200)
+  ratings = models.FloatField()
+  genre = models.CharField(max_length=200)
+  barcode = models.IntegerField()
+  publisher = models.CharField(max_length=50)
+  date = models.CharField(max_length=200)
