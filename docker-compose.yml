@@ -1,7 +1,18 @@
 version: "3.9"
 
 services:
-  api-server:
+  api-app:
     build: .
-    ports:
-      - "80:5000"
+    volumes: 
+      - "./book_server/static:/book_server/static"
+  
+  api-server:
+    image: nginx
+    ports: 
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./nginx.conf:/etc/nginx/nginx.conf"
+      - "./ssu-ai-book.crt:/etc/nginx/ssu-ai-book.crt"
+      - "./ssu-ai-book.key:/etc/nginx/ssu-ai-book.key"
+      - "./book_server/static:/usr/share/nginx/static"
