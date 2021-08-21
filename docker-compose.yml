@@ -5,6 +5,7 @@ services:
     build: .
     volumes: 
       - "./book_server/static:/book_server/static"
+    command: sh -c "python /book_server/manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:5000 book_server.wsgi:application"
   
   api-server:
     image: nginx
