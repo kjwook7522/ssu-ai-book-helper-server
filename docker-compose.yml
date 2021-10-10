@@ -20,5 +20,3 @@ services:
   
   ai-app:
     build: "./ai_server"
-    ports:
-      - 8080:8080

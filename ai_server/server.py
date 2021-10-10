@@ -131,12 +131,12 @@ def recom_user_result_author(author):
 
 ### 데이터 처리 END ###
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/ai', methods=['GET', 'POST'])
 def home():
     return render_template('home.html')
 
 
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/ai/search', methods=['GET', 'POST'])
 def search():
 
     if request.method == 'GET':
@@ -322,5 +322,5 @@ def get_recommended_books(book):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8000)
     # print(books_df['Price'].head())
