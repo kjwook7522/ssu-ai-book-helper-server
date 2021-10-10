@@ -4,7 +4,7 @@ ADD requirements.txt .
 
 RUN pip install -r requirements.txt
 
-ADD book_server book_server
+ADD . book_server/
 
 WORKDIR /book_server
 

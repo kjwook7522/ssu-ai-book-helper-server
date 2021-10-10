@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   api-app:
-    build: .
+    build: "./book_server"
     volumes: 
       - "./book_server/static:/book_server/static"
     command: sh -c "python /book_server/manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:5000 book_server.wsgi:application"
@@ -17,3 +17,8 @@ services:
       - "./ssu-ai-book-fullchain.pem:/etc/nginx/ssu-ai-book-fullchain.pem"
       - "./ssu-ai-book-private.pem:/etc/nginx/ssu-ai-book-private.pem"
       - "./book_server/static:/usr/share/nginx/static"
+  
+  ai-app:
+    build: "./ai_server"
+    ports:
+      - 8080:8080
