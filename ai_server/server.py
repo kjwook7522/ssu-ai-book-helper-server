@@ -296,6 +296,8 @@ def get_book_obj2(csv_book):
     csv_book.year_of_publication = int(csv_book.year_of_publication)
     csv_book.rating = float(csv_book.rating)
     csv_book.year_of_publication = str(csv_book.year_of_publication)
+    if pd.isna(csv_book.book_title):
+        csv_book.book_title = ''
 
     book = {"title": csv_book.book_title,
             "author": csv_book.book_author,
