@@ -156,12 +156,26 @@ def search():
         book = get_book_info(request.form)
 
     # 추천 책 목록
-    books = get_recommended_books(book)
+    # books = get_recommended_books(book)
     print(book, 'book')
-    print(books, 'books')
+    # print(books, 'books')
     return jsonify(book)
     # return render_template('search.html', book=book, recommended_books=books)
 
+@app.route('/ai/recommend', methods=['POST'])
+def recommend():
+    print('[recommend / POST] ', request.form)
+    text = request.form['text']
+
+    # 검색어 없을 때
+    if text.strip() == '':
+        return render_template('home.html')
+    # 검색 책
+    book = get_book_info(request.form)
+    
+    books = get_recommended_books(book)
+    print(books, 'books')
+    return jsonify(books)
 
 def get_book_info_from_barcode(barcode):
     book = get_default_book()
