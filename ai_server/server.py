@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 
 # from wtforms import Form, TextAreaField, validators
 # import pickle
@@ -16,6 +17,7 @@ import warnings; warnings.filterwarnings('ignore')
 
 
 app = Flask(__name__)
+CORS(app, resources={r'*': {'origins': '*'}})
 # run_with_ngrok(app)
 
 
